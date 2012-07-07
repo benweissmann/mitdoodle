@@ -1,4 +1,4 @@
-ENV['RAILS_RELATIVE_URL_ROOT'] = "/mitdoodle"
+#ENV['RAILS_RELATIVE_URL_ROOT'] = "/mitdoodle"
 
 # Uncomment below to put Rails into production mode
 # ENV['RAILS_ENV'] ||= 'production'

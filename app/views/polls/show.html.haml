@@ -1,0 +1,62 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @poll.user.username
+%p
+  %b Title:
+  = @poll.title
+
+%p
+  %b Desc:
+  = @poll.desc
+
+%p
+  %b Short Link:
+  = @poll.short_link
+
+
+%p
+  %b Closed:
+  = @poll.closed
+
+%h2 Options
+
+= form_tag vote_poll_path(@poll) do
+  %table
+    %thead
+      %tr
+        %th
+        - @poll.options.each do |opt|
+          %th= opt.label
+    %tbody
+      - @poll.voters.each do |user|
+        - next if (user.id == controller.current_user.id) && !@poll.closed
+        %tr
+          %td= user.username
+          - @poll.options.each do |opt|
+            - td_for(user, opt) do |vote|
+              - if vote.nil?
+                No Vote
+              - elsif vote
+                Yes
+              -else
+                No
+
+      - unless @poll.closed
+        %tr
+          %td= controller.current_user.username
+          - @poll.options.each do |opt|
+            - td_for(controller.current_user, opt) do |vote|
+              = check_box_tag(opt.id, 1, vote)
+    
+  - unless @poll.closed
+    = submit_tag "vote"
+    
+- if controller.current_user == @poll.user
+  = link_to 'Edit', edit_poll_path(@poll)
+  = link_to 'Destroy', @poll, :confirm => 'Are you sure?', :method => :delete
+  - if @poll.closed
+    = link_to 'Open', open_poll_path(@poll), :method => :post
+  - else
+    = link_to 'Close', close_poll_path(@poll), :method => :post

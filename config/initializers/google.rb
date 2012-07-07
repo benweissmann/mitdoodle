@@ -1,0 +1,1 @@
+GOOGLE_API_KEY = YAML.load(IO.read('config/google.yml'))['api_key']

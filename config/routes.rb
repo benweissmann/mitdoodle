@@ -1,7 +1,13 @@
 Mitdoodle::Application.routes.draw do
-  resources :polls
+  resources :polls do
+    member do
+      post :vote
+      post :open
+      post :close
+    end
+  end
 
-  resources :users
+  root :to => 'dashboard#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

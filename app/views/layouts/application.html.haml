@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %title MIT Doodle
+    = stylesheet_link_tag :all
+    = javascript_include_tag :defaults
+    = javascript_include_tag 'form_builder'
+    = csrf_meta_tag
+  %body
+    - if flash[:error]
+      %p= flash[:error]
+    - if flash[:notice]
+      %p= flash[:notice]
+    = yield

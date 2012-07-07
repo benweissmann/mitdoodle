@@ -1,0 +1,1 @@
+MITDOODLE_HOME = 'http://localhost:3000'

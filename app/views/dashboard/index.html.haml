@@ -1,0 +1,15 @@
+Welcome, #{controller.current_user.username}!
+
+= link_to "New Poll", new_poll_path
+
+%h2 Polls you've created
+
+%ul
+  - Poll.find_all_by_user_id(controller.current_user.id).each do |poll|
+    %li= link_to poll.title, poll_path(poll.key)
+
+%h2 Polls you've voted in
+
+%ul
+  - controller.current_user.polls.each do |poll|
+    %li= link_to poll.title, poll_path(poll)
