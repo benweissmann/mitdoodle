@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     if ENV['SSL_CLIENT_S_DN_Email'].blank?
-      redirect_to MITDOODLE_HOME + request.path
+      redirect_to MITDOODLE_HOME_BARE + request.path
     end
   end
 
