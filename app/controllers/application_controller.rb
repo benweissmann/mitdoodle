@@ -10,13 +10,16 @@ class ApplicationController < ActionController::Base
   private
 
   def require_login
-    if ENV['SSL_CLIENT_S_DN_Email'].blank?
+    if current_username.blank?
       render :text => 'no cert!'
     end
   end
 
   def login
-    username = (request.env['REMOTE_USER'] || ENV['REMOTE_USER'])
-    User.find_or_create_by_username(username)
+    User.find_or_create_by_username(current_username)
+  end
+
+  def currnet_username
+    (request.env['REMOTE_USER'] || ENV['REMOTE_USER'])
   end
 end
