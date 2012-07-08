@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def login
-    username = ENV['SSL_CLIENT_S_DN_Email'].split('@').first
+    username = (request.env['REMOTE_USER'] || ENV['REMOTE_USER'])
     User.find_or_create_by_username(username)
   end
 end
