@@ -1,15 +1,52 @@
-Welcome, #{controller.current_user.username}!
+.hero-unit
+  .clear
+  .hero-row
+    .clear
+    .hero-left
+      %h1 MITDoodle
+      %h2 Authenticated Scheduling and Polling
+      %p
+        = link_to 'Create a Poll &raquo;'.html_safe, new_poll_path, :class => 'btn btn-primary btn-large'
+    .hero-right
+      = image_tag('lock.png')
+    .clear
 
-= link_to "New Poll", new_poll_path
+%h2.dashboard-header Polls you've created
 
-%h2 Polls you've created
+%table.table.data-table
+  %thead
+    %tr
+      %th Title
+      %th Date
+      %th Status
+      %th Actions
+  %tbody
+    - controller.current_user.polls_created.order('created_at DESC').each do |poll|
+      %tr
+        %td= poll.title
+        %td= format_time(poll.created_at)
+        %td= poll.closed ? 'Closed' : 'Open'
+        %td
+          = link_to 'Show', poll_path(poll.key), :class => 'btn'
+          = link_to 'Edit', edit_poll_path(poll.key), :class => 'btn'
+          - if poll.closed
+            = link_to 'Open', open_poll_path(poll), :method => :post, :class => 'btn btn-success'
+          - else
+            = link_to 'Close', close_poll_path(poll), :method => :post, :class => 'btn btn-danger'
 
-%ul
-  - Poll.find_all_by_user_id(controller.current_user.id).each do |poll|
-    %li= link_to poll.title, poll_path(poll.key)
+%h2.dashboard-header Polls you've voted in
 
-%h2 Polls you've voted in
-
-%ul
-  - controller.current_user.polls.each do |poll|
-    %li= link_to poll.title, poll_path(poll)
+%table.data-table.table
+  %thead
+    %tr
+      %th Title
+      %th Date
+      %th Status
+      %th Actions
+  %tbody
+    - controller.current_user.polls.order('created_at DESC').each do |poll|
+      %tr
+        %td= poll.title
+        %td= format_time(poll.created_at)
+        %td= poll.closed ? 'Closed' : 'Open'
+        %td= link_to 'Show', poll_path(poll.key), :class => 'btn'

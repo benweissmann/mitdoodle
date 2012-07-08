@@ -1,14 +1,51 @@
 !!!
-%html
+%html{:lang => "en"}
   %head
+    %meta{:charset => "utf-8"}
     %title MIT Doodle
-    = stylesheet_link_tag :all
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}
+    %link{:rel => 'icon', :type => 'img/png', :href => "#{MITDOODLE_HOME}/images/favicon.png"}
+    = stylesheet_link_tag 'bootstrap.min.css'
+    = stylesheet_link_tag 'application.css'
+    = stylesheet_link_tag 'jquery.dataTables-bootstrap.css'
     = javascript_include_tag :defaults
-    = javascript_include_tag 'form_builder'
+    = javascript_include_tag 'jquery.dataTables.min.js'
+    = javascript_include_tag 'jquery.dataTables-bootstrap.js'
+    = javascript_include_tag 'bootstrap.min.js'
+    = javascript_include_tag 'form_builder.js'
+    = javascript_include_tag 'dashboard.js'
+    = javascript_include_tag 'poll.js'
     = csrf_meta_tag
   %body
-    - if flash[:error]
-      %p= flash[:error]
-    - if flash[:notice]
-      %p= flash[:notice]
-    = yield
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container-fluid
+          %img.pull-left{:src => "#{MITDOODLE_HOME}/images/menu-icon.png"}
+            
+          %a.brand{:href => MITDOODLE_HOME}
+            MITDoodle
+    .container-fluid
+      .notices
+        - if flash[:error]
+          .alert.alert-error
+            %a.close{:href => '#', 'data-dismiss' => 'alert'} &times;
+            = flash[:error]
+        - if flash[:notice]
+          .alert.alert-info
+            %a.close{:href => '#', 'data-dismiss' => 'alert'} &times;
+            =flash[:notice]
+      .page-content
+        = yield
+      %footer
+        %p
+          Developed by
+          = succeed '.' do
+            %a{:href => 'http://benweissmann.com'} Ben Weissmann
+          Send feedback to
+          = succeed '.' do
+            %a{:href => 'mailto:mitdoodle@mit.edu'} mitdoodle@mit.edu
+          Source code on
+          = succeed '.' do
+            %a{:href => 'https://github.com/benweissmann/mitdoodle'} GitHub
+          = succeed '.' do
+            = link_to 'Credits', static_path(:page => 'credits')

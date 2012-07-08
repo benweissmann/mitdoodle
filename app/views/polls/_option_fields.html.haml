@@ -1,4 +1,7 @@
-%p.fields
-  = f.label :label, "Option"
-  = f.text_field :label
-  = link_to_remove_fields "remove", f
+
+.fields
+  = f.hidden_field(:_destroy)
+  .input-append
+    = f.text_field :label, :class => 'option-input'
+    %a.btn.btn-danger.btn-remove{:href => '#', :onclick => "remove_fields(this)"}
+      %i.icon-remove

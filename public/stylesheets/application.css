@@ -1,0 +1,164 @@
+body {
+    background-color: #96C47A;
+    min-width: 400px;
+}
+
+footer {
+    color: #666;
+    padding: 5px 0 5px 0;
+    border-top: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.container-fluid {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+body > .container-fluid {
+    background-color: white;
+    padding-top: 60px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 0 50px #000;
+    margin-bottom: 20px;
+}
+
+.navbar img {
+    margin-top: 8px;
+    margin-right: 6px;
+}
+
+.navbar a.brand {
+    padding-top: 10px;
+}
+
+.hero-row {
+    margin-left: auto;
+    margin-right: auto;
+    width: 656px;
+}
+
+.hero-left {
+    width: 300px;
+    float: left;
+    margin-top: 20px;
+}
+
+.hero-left p {
+    margin-top: 40px;
+    width:100%;
+    text-align: center;
+}
+
+.hero-right {
+    width: 256px;
+    float: left;
+    margin-left: 100px;
+}
+
+@media(max-width: 900px) {
+    .hero-right {
+        display: none;
+    }
+}
+
+.clear {
+    clear: both;
+}
+
+.dataTables_info {
+    float: left;
+}
+
+.dashboard-header {
+    margin-top: 60px;
+}
+
+.dataTables_wrapper {
+    margin-bottom: 120px;
+}
+
+.dataTables_wrapper .btn {
+    margin-right: 10px;
+}
+
+.dataTables_wrapper td {
+    width: 20%;
+}
+
+.dataTables_wrapper td:last-child {
+    width: 40%;
+}
+
+.alert {
+    margin-top: 20px;
+}
+
+.label-required {
+    font-weight: bold;
+}
+
+.option-input {
+    margin-top: 10px;
+}
+
+.input-append .btn {
+    margin-left: -4px;
+    margin-top: 10px;
+}
+
+.btn-add-option {
+    margin-top: 10px;
+}
+
+.vote-table-wrapper {
+    overflow: auto;
+}
+
+.vote-table {
+    width: auto;
+}
+
+.vote-table td, .vote-table th {
+    width: 50px;
+    min-width: 50px;
+    text-align: center;
+}
+
+.vote-table td:nth-child(2), .vote-table th:nth-child(2) {
+    width: 6em;
+    min-width: 6em;
+}
+
+.vote-table td.yes {
+    background-color: #96C47A;
+}
+
+.vote-table td.no {
+    background-color: #FD4D68;
+}
+
+.vote-table tr:hover td.yes {
+    background-color: #A4C491;
+}
+
+.vote-table tr:hover td.no {
+    background-color: #FD657C;
+}
+
+.vote-table td {
+    border: 0px solid transparent;
+}
+
+.owner-links, .back-link {
+    margin-top: 20px;
+}
+
+.vote-count {
+    font-weight: bold;
+}
+
+.vote-checkbox {
+    cursor: pointer;
+}

@@ -6,6 +6,10 @@ class Option < ActiveRecord::Base
   # delete current votes if the option changes
   after_update :delete_votes
 
+  def yes_votes_count
+    self.votes.where(['yes = ?', true]).size
+  end
+
   private
 
   def delete_votes

@@ -1,7 +1,7 @@
 class PollsController < ApplicationController
   before_filter :find_poll, :except =>  [:index, :new, :create]
   before_filter :require_ownership, :except => [:index, :new, :create, :vote, :show]
-  before_filter :require_open, :only => [:vote]
+  before_filter :require_open, :only => [:vote, :edit]
 
   # GET /polls
   def index
@@ -10,6 +10,11 @@ class PollsController < ApplicationController
 
   # GET /polls/1
   def show
+    @counts = @poll.options.map(&:yes_votes_count)
+    max = @counts.max
+    @counts.map! {|count| [count, count == max]}
+    @most_popular = @poll.options.each_with_index.select{|opt, i| @counts[i].last}.map(&:first)
+
     respond_to do |format|
       format.html # show.html.haml
     end
@@ -118,6 +123,16 @@ class PollsController < ApplicationController
     end
 
     respond_to do |format|
+      format.html { redirect_to(poll_path(@poll)) }
+    end
+  end
+
+  # DELTETE /polls/1/voters/1
+  def delete_voter
+    @poll.votes.where(:user_id => params[:voter_id]).each {|v| v.destroy}
+
+    respond_to do |format|
+      flash[:notice] = 'Vote deleted'
       format.html { redirect_to(poll_path(@poll)) }
     end
   end

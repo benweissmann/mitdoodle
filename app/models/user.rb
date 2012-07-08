@@ -7,5 +7,7 @@ class User < ActiveRecord::Base
          group('poll_id')
   end
 
-
+  def polls_created
+    Poll.where(['user_id = ?', self.id])
+  end
 end

@@ -1,5 +1,6 @@
 class Poll < ActiveRecord::Base
   has_many :options, :dependent => :destroy
+  has_many :votes, :through => :options
   belongs_to :user
 
   accepts_nested_attributes_for :options,

@@ -1,29 +1,39 @@
-= form_for(@poll) do |f|
-  - if @poll.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(@poll.errors.count, "error")
-        prohibited this poll from being saved:
-      %ul
-        - @poll.errors.full_messages.each do |msg|
-          %li= msg
-  .field
-    = f.label :title
-    %br/
-    = f.text_field :title
+- if @poll.errors.any?
+  .alert.alert-error.alert-block
+    %a.close{:href => '#', 'data-dismiss' => 'alert'} &times;
+    %h4.alert-heading
+      = pluralize(@poll.errors.count, "error")
+      prohibited this poll from being saved
+    %ul
+      - @poll.errors.full_messages.each do |msg|
+        %li= msg
 
-  .field
-    = f.label :desc
-    %br/
-    = f.text_area :desc, :rows => 5, :cols => 40
+%p
+  Fields in
+  %b bold
+  are required
 
-  %h2 Options
-  
-  = f.fields_for :options do |builder|
-    = render 'option_fields', :f => builder
+= form_for(@poll, :html => {:class => 'form-horizontal'}) do |f|
+  .control-group
+    = f.label :title, :class => 'control-label label-required'
+    .controls
+      = f.text_field :title
 
-  %p
-    = link_to_add_fields "Add Option", f, :options
+  .control-group
+    = f.label :desc, 'Description', :class => 'control-label'
+    .controls
+      = f.text_area :desc, :rows => 5, :cols => 40
 
-  .actions
-    = f.submit
+  .control-group
+    %label.control-label Options
+    .controls
+      = f.fields_for :options do |builder|
+        = render 'option_fields', :f => builder
+
+      %p
+        = link_to_add_fields f, :options do
+          %i.icon-plus
+          Add Option
+
+  .form-actions
+    = f.submit :class => 'btn btn-primary'

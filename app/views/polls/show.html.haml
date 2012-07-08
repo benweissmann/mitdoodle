@@ -1,62 +1,84 @@
-%p#notice= notice
+%h1= @poll.title
 
 %p
-  %b User:
+  Created by
   = @poll.user.username
-%p
-  %b Title:
-  = @poll.title
+  at
+  = format_time(@poll.created_at)
 
-%p
-  %b Desc:
-  = @poll.desc
+- unless @poll.desc.blank?
+  %p= @poll.desc
 
 %p
   %b Short Link:
-  = @poll.short_link
-
+  %a{:href => @poll.short_link}= @poll.short_link
 
 %p
-  %b Closed:
-  = @poll.closed
-
-%h2 Options
-
-= form_tag vote_poll_path(@poll) do
-  %table
-    %thead
-      %tr
-        %th
-        - @poll.options.each do |opt|
-          %th= opt.label
-    %tbody
-      - @poll.voters.each do |user|
-        - next if (user.id == controller.current_user.id) && !@poll.closed
-        %tr
-          %td= user.username
-          - @poll.options.each do |opt|
-            - td_for(user, opt) do |vote|
-              - if vote.nil?
-                No Vote
-              - elsif vote
-                Yes
-              -else
-                No
-
-      - unless @poll.closed
-        %tr
-          %td= controller.current_user.username
-          - @poll.options.each do |opt|
-            - td_for(controller.current_user, opt) do |vote|
-              = check_box_tag(opt.id, 1, vote)
-    
-  - unless @poll.closed
-    = submit_tag "vote"
-    
-- if controller.current_user == @poll.user
-  = link_to 'Edit', edit_poll_path(@poll)
-  = link_to 'Destroy', @poll, :confirm => 'Are you sure?', :method => :delete
-  - if @poll.closed
-    = link_to 'Open', open_poll_path(@poll), :method => :post
+  %b Most Popular Option:
+  - if @most_popular.empty? or (@most_popular.first.yes_votes_count == 0)
+    None
+  - elsif @most_popular.length == 1
+    = @most_popular.first.label
   - else
-    = link_to 'Close', close_poll_path(@poll), :method => :post
+    Several, including
+    = @most_popular.first.label
+
+- if @poll.closed
+  %p
+    %b This poll is closed
+
+.vote-table-wrapper
+  = form_tag vote_poll_path(@poll) do
+    %table.table.vote-table
+      %thead
+        %tr
+          %th
+          %th
+          - @poll.options.each do |opt|
+            %th= opt.label
+      %tbody
+        - @poll.voters.each do |user|
+          - next if (user.id == controller.current_user.id) && !@poll.closed
+          %tr
+            %td
+              - if owner
+                = link_to '<i class="icon-remove />"'.html_safe, delete_voter_path(:id => @poll, :voter_id => user.id), :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
+            %td
+              = user.username
+            - @poll.options.each do |opt|
+              - td_for(user, opt) do |vote|
+                - if vote.nil?
+                  %i.icon-question-sign
+                - elsif vote
+                  %i.icon-ok-sign
+                -else
+                  %i.icon-remove-sign
+
+
+        - unless @poll.closed
+          %tr
+            %td= submit_tag "Vote", :class => 'btn btn-primary btn-vote'
+            %td= controller.current_user.username
+            - @poll.options.each do |opt|
+              - td_for(controller.current_user, opt, 'vote-checkbox') do |vote|
+                = check_box_tag(opt.id, 1, vote)
+        %tr
+          %td
+          %td
+          - @counts.each do |count, is_max|
+            %td
+              - if is_max
+                %b= count
+              - else
+                = count
+    
+- if owner
+  .owner-links
+    - if @poll.closed
+      = link_to 'Open', open_poll_path(@poll), :method => :post, :class => 'btn btn-success'
+    - else
+      = link_to 'Edit', edit_poll_path(@poll), :class => 'btn'
+      = link_to 'Close', close_poll_path(@poll), :method => :post, :class => 'btn btn-danger'
+
+.back-link
+  %a{:href => MITDOODLE_HOME} &laquo; Back

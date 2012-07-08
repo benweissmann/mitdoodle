@@ -1,5 +1,3 @@
 %h1 Editing poll
 = render 'form'
-= link_to 'Show', @poll
-|
-= link_to 'Back', polls_path
+= link_to '&laquo; Back'.html_safe, poll_path(@poll)
