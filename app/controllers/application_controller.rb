@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     User.find_or_create_by_username(current_username)
   end
 
-  def currnet_username
+  def current_username
     (request.env['REMOTE_USER'] || ENV['REMOTE_USER'])
   end
 end
