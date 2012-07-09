@@ -6,10 +6,9 @@ module UrlShortener
     http.use_ssl = true
     
     params = {'longUrl' => url}.to_json
-    resp, body = http.post("/urlshortener/v1/url?key=#{GOOGLE_API_KEY}",
-                           params,
-                           {'Content-Type' => 'application/json'})
+    resp = http.post("/urlshortener/v1/url?key=#{GOOGLE_API_KEY}",
+                     params, {'Content-Type' => 'application/json'})
     
-    return JSON.parse(body)['id']
+    return JSON.parse(resp.body)['id']
   end
 end
