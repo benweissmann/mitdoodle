@@ -7,7 +7,7 @@ class VoteTest < ActiveSupport::TestCase
     assert_equal opt, vote.option
   end
 
-  test "user" do
+  test "user association" do
     user = create :user
     vote = create :vote, :user => user
     assert_equal user, vote.user
