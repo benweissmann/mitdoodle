@@ -1,13 +1,28 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'set'
+require 'mocha'
 
 class ActiveSupport::TestCase
-  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
-  #
-  # Note: You'll currently still have to declare fixtures explicitly in integration tests
-  # -- they do not yet inherit this setting
-  fixtures :all
+  include FactoryGirl::Syntax::Methods
 
-  # Add more helper methods to be used by all tests here...
+  def login username='testuser'
+    request.env['REMOTE_USER'] = username
+  end
+
+  def test_user
+    User.find_or_create_by_username 'testuser'
+  end
+
+  def assert_redirects_to expected_url, short_link
+    response = Net::HTTP.get_response URI(short_link)
+
+    case response
+    when Net::HTTPRedirection then
+      assert_equal expected_url, response['location']
+    else
+      assert_equal expected_url, short_link
+    end
+  end
 end

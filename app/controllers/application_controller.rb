@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     if current_username.blank?
-      render :text => 'no cert!'
+      render :text => 'No Certificate', :status => :forbidden
     end
   end
 

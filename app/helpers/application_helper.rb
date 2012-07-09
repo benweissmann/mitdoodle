@@ -1,5 +1,5 @@
 module ApplicationHelper
   def format_time time
-    time.strftime '%-m/%-d/%y %-H:%M %p'
+    time.strftime '%-m/%-d/%y %-l:%M %p'
   end
 end

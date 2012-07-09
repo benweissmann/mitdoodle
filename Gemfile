@@ -36,3 +36,9 @@ gem 'fcgi'
 group :development do
   gem 'sqlite3'
 end
+
+group :test do
+  gem 'factory_girl_rails'
+  gem 'mocha', :require => false
+  gem "minitest", ">= 2.6.1"
+end

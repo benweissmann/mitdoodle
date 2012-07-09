@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  poll_id: 1
-  label: MyString
-
-two:
-  poll_id: 1
-  label: MyString

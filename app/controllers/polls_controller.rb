@@ -39,7 +39,7 @@ class PollsController < ApplicationController
   def create
     @poll = Poll.new(params[:poll])
     @poll.user_id = current_user.id
-    @poll.key = ActiveSupport::SecureRandom.hex(10)
+    @poll.key = ActiveSupport::SecureRandom.hex(15)
     @poll.generate_short_link
 
     respond_to do |format|
@@ -61,15 +61,6 @@ class PollsController < ApplicationController
       else
         format.html { render :action => "edit" }
       end
-    end
-  end
-
-  # DELETE /polls/1
-  def destroy
-    @poll.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(polls_url) }
     end
   end
 
@@ -142,7 +133,7 @@ class PollsController < ApplicationController
   def require_ownership
     unless @poll.user == current_user
       flash[:error] = "You don't have permission to do that"
-      redirect_to(poll_url(@poll))
+      redirect_to poll_url(@poll)
     end
   end
 

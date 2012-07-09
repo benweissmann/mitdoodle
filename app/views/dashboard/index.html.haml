@@ -13,40 +13,46 @@
 
 %h2.dashboard-header Polls you've created
 
-%table.table.data-table
-  %thead
-    %tr
-      %th Title
-      %th Date
-      %th Status
-      %th Actions
-  %tbody
-    - controller.current_user.polls_created.order('created_at DESC').each do |poll|
+- if @polls_created.empty?
+  %p You haven't created any polls.
+- else
+  %table.table.data-table
+    %thead
       %tr
-        %td= poll.title
-        %td= format_time(poll.created_at)
-        %td= poll.closed ? 'Closed' : 'Open'
-        %td
-          = link_to 'Show', poll_path(poll.key), :class => 'btn'
-          = link_to 'Edit', edit_poll_path(poll.key), :class => 'btn'
-          - if poll.closed
-            = link_to 'Open', open_poll_path(poll), :method => :post, :class => 'btn btn-success'
-          - else
-            = link_to 'Close', close_poll_path(poll), :method => :post, :class => 'btn btn-danger'
+        %th Title
+        %th Date
+        %th Status
+        %th Actions
+    %tbody
+      - @polls_created.each do |poll|
+        %tr
+          %td= poll.title
+          %td= format_time(poll.created_at)
+          %td= poll.closed ? 'Closed' : 'Open'
+          %td
+            = link_to 'Show', poll_path(poll.key), :class => 'btn'
+            = link_to 'Edit', edit_poll_path(poll.key), :class => 'btn'
+            - if poll.closed
+              = link_to 'Open', open_poll_path(poll), :method => :post, :class => 'btn btn-success'
+            - else
+              = link_to 'Close', close_poll_path(poll), :method => :post, :class => 'btn btn-danger'
 
 %h2.dashboard-header Polls you've voted in
 
-%table.data-table.table
-  %thead
-    %tr
-      %th Title
-      %th Date
-      %th Status
-      %th Actions
-  %tbody
-    - controller.current_user.polls.order('created_at DESC').each do |poll|
+- if @polls_created.empty?
+  %p You haven't created any polls.
+- else
+  %table.data-table.table
+    %thead
       %tr
-        %td= poll.title
-        %td= format_time(poll.created_at)
-        %td= poll.closed ? 'Closed' : 'Open'
-        %td= link_to 'Show', poll_path(poll.key), :class => 'btn'
+        %th Title
+        %th Date
+        %th Status
+        %th Actions
+    %tbody
+      - @polls_voted.each do |poll|
+        %tr
+          %td= poll.title
+          %td= format_time(poll.created_at)
+          %td= poll.closed ? 'Closed' : 'Open'
+          %td= link_to 'Show', poll_path(poll.key), :class => 'btn'
