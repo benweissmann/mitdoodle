@@ -30,7 +30,7 @@ class PollTest < ActiveSupport::TestCase
     assert_equal votes.to_set, poll.votes.to_set  
   end
 
-  test "user" do
+  test "user assoc" do
     user = create :user
     poll = create :poll, :user => user
     assert_equal user, poll.user
