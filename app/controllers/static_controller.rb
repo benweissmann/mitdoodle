@@ -6,11 +6,14 @@ class StaticController < ApplicationController
     end
   end
 
+  private
+
   # Ensure the page parameter doesn't have anything that
   # could cause #show to render something outside of
   # app/views/static. Only allow a-z.
   def check_page
     unless params[:page] =~ /\A[a-z]+\z/
+      flash[:error] = "Invalid page"
       redirect_to MITDOODLE_HOME
     end
   end
