@@ -39,8 +39,8 @@
 
 %h2.dashboard-header Polls you've voted in
 
-- if @polls_created.empty?
-  %p You haven't created any polls.
+- if @polls_voted.empty?
+  %p You haven't voted in any polls.
 - else
   %table.data-table.table
     %thead

@@ -26,6 +26,13 @@ class PollsControllerTest < ActionController::TestCase
     assert_template 'show'
   end
 
+  test "can't access poll via id" do
+    poll = create :poll
+    get :show, :id => poll.id
+    assert_redirected_to MITDOODLE_HOME
+    assert_equal 'Invalid poll key', flash[:error]
+  end
+
   test "should get new" do
     get :new
     assert_response :success
@@ -82,14 +89,110 @@ class PollsControllerTest < ActionController::TestCase
     assert_equal 'old title', poll.reload.title
   end
 
-  # TODO:
-  # vote
-  # close
-  # close auth
-  # open
-  # open auth
-  # delete_voter
-  # delete_voter auth
+  test "voting" do
+    poll = create :poll
+    opt1 = create :option, :poll => poll
+    opt2 = create :option, :poll => poll
+    opt3 = create :option, :poll => poll
+
+    post :vote, {:id => poll.to_param, opt2.id.to_s => '1'}
+    assert_redirected_to poll_path(poll)
+    assert_equal 'You have successfully voted.', flash[:notice]
+
+    assert_equal false, Vote.find_by_user_id_and_option_id(test_user, opt1.id).yes
+    assert_equal true, Vote.find_by_user_id_and_option_id(test_user, opt2.id).yes
+    assert_equal false, Vote.find_by_user_id_and_option_id(test_user, opt3.id).yes
+  end 
+
+  test "voting requires poll to be open" do
+    poll = create :poll, :closed => true
+    opt1 = create :option, :poll => poll
+    opt2 = create :option, :poll => poll
+    opt3 = create :option, :poll => poll
+
+    post :vote, {:id => poll.to_param, opt1.id.to_s => '1'}
+    assert_redirected_to poll_path(poll)
+    assert_equal 'The poll is closed', flash[:error]
+
+    assert_nil Vote.find_by_user_id_and_option_id(test_user, opt1.id)
+    assert_nil Vote.find_by_user_id_and_option_id(test_user, opt2.id)
+    assert_nil Vote.find_by_user_id_and_option_id(test_user, opt3.id)
+  end
+
+  test "closing" do
+    poll = create :poll, :user => test_user
+    post :close, :id => poll.to_param
+    assert_redirected_to poll_path(poll)
+    assert_equal 'Poll has been closed', flash[:notice]
+  end
+
+  test "closing required ownership" do
+    poll = create :poll
+    post :close, :id => poll.to_param
+    assert_forbidden poll
+  end
+
+  test "opening" do
+    poll = create :poll, :user => test_user
+    post :open, :id => poll.to_param
+    assert_redirected_to poll_path(poll)
+    assert_equal 'Poll has been opened', flash[:notice]
+  end
+
+  test "opening required ownership" do
+    poll = create :poll
+    post :open, :id => poll.to_param
+    assert_forbidden poll
+  end
+
+  test "delete_voter" do
+    poll = create :poll, :user => test_user
+    opt1 = create :option, :poll => poll
+    opt2 = create :option, :poll => poll
+    opt3 = create :option, :poll => poll
+
+    login 'foo'
+    foo = create :user, :username => 'foo'
+    post :vote, {:id => poll.to_param, opt2.id.to_s => '1'}
+
+    login 'bar'
+    bar = create :user, :username => 'bar'
+    post :vote, {:id => poll.to_param, opt1.id.to_s => '1'}
+
+    login 'testuser'
+    post :delete_voter, :id => poll.to_param, :voter_id => bar.id
+    assert_redirected_to poll_path(poll)
+    assert_equal 'Vote deleted', flash[:notice]
+
+    assert_equal false, Vote.find_by_user_id_and_option_id(foo.id, opt1.id).yes
+    assert_equal true, Vote.find_by_user_id_and_option_id(foo.id, opt2.id).yes
+    assert_equal false, Vote.find_by_user_id_and_option_id(foo.id, opt3.id).yes
+
+    assert_nil Vote.find_by_user_id_and_option_id(bar.id, opt1.id)
+    assert_nil Vote.find_by_user_id_and_option_id(bar.id, opt2.id)
+    assert_nil Vote.find_by_user_id_and_option_id(bar.id, opt3.id)
+  end
+
+  test "delete_voter requires ownership" do
+    poll = create :poll
+    opt1 = create :option, :poll => poll
+    opt2 = create :option, :poll => poll
+    opt3 = create :option, :poll => poll
+
+    login 'foo'
+    foo = create :user, :username => 'foo'
+    post :vote, {:id => poll.to_param, opt2.id.to_s => '1'}
+
+    login 'bar'
+    bar = create :user, :username => 'bar'
+    post :vote, {:id => poll.to_param, opt1.id.to_s => '1'}
+
+    post :delete_voter, :id => poll.to_param, :voter_id => bar.id
+
+    assert_equal false, Vote.find_by_user_id_and_option_id(foo.id, opt1.id).yes
+    assert_equal true, Vote.find_by_user_id_and_option_id(foo.id, opt2.id).yes
+    assert_equal false, Vote.find_by_user_id_and_option_id(foo.id, opt3.id).yes
+  end
 
   def assert_forbidden poll
     assert_redirected_to poll_url(poll)

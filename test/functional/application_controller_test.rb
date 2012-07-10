@@ -3,9 +3,6 @@ require 'test_helper'
 class ApplicationControllerTest < ActionController::TestCase
   tests DashboardController
 
-  setup do
-  end
-
   test "require login ENV" do
     get :index
     assert_response :forbidden

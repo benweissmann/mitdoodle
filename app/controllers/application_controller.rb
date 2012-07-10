@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_filter :require_login
 
   def current_user
-    @user ||= login
+    User.find_or_create_by_username(current_username)
   end
 
   private
@@ -13,10 +13,6 @@ class ApplicationController < ActionController::Base
     if current_username.blank?
       render :text => 'No Certificate', :status => :forbidden
     end
-  end
-
-  def login
-    User.find_or_create_by_username(current_username)
   end
 
   def current_username
