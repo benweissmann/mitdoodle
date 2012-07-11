@@ -56,9 +56,8 @@ class PollsControllerTest < ActionController::TestCase
   end
 
   test "should create poll" do
-    template_poll = create :poll
     assert_difference('Poll.count') do
-      post :create, :poll => template_poll.attributes
+      post :create, :poll => {:title => 'Foo', :options_attributes => [:label => 'foo']}
     end
 
     poll = assigns(:poll)
@@ -84,6 +83,7 @@ class PollsControllerTest < ActionController::TestCase
 
   test "should update poll" do
     poll = create :poll, :user => test_user
+    opt = create :option, :poll => poll
     attrs = poll.attributes
     attrs[:title] = 'new title'
 

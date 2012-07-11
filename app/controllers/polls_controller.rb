@@ -42,8 +42,19 @@ class PollsController < ApplicationController
     @poll.key = ActiveSupport::SecureRandom.hex(15)
     @poll.generate_short_link
 
+    success = false
+    @poll.transaction do
+      success = @poll.save
+      if success && @poll.reload.options.size < 1
+        puts "too few options"
+        success = false
+        @poll.errors.add(:options, "must have at least one option")
+        raise ActiveRecord::Rollback
+      end
+    end
+
     respond_to do |format|
-      if @poll.save
+      if success
         flash[:notice] = 'Poll was successfully created.'
         format.html { redirect_to(poll_path(@poll)) }
       else
@@ -57,8 +68,18 @@ class PollsController < ApplicationController
 
   # PUT /polls/1
   def update
+    success = false
+    @poll.transaction do
+      success = @poll.update_attributes(params[:poll]) 
+      if success && @poll.reload.options.size < 1
+        success = false
+        @poll.errors.add(:options, "must have at least one option")
+        raise ActiveRecord::Rollback
+      end
+    end
+
     respond_to do |format|
-      if @poll.update_attributes(params[:poll])
+      if success
         flash[:notice] = 'Poll was successfully updated.'
         format.html { redirect_to(@poll) }
       else
