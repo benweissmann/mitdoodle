@@ -69,6 +69,19 @@ class PollsControllerTest < ActionController::TestCase
     assert_redirected_to poll_path(poll)
   end
 
+  test "unsuccessful poll creation" do
+    assert_no_difference('Poll.count') do
+      post :create, :poll => {:options_attributes => [:label => 'foo']}
+    end
+
+    assert_response :success
+    assert_template 'new'
+    poll = assigns(:poll)
+    assert poll.errors.any?
+    assert_equal 'foo', poll.options.first.label
+    assert_equal 4, poll.options.length
+  end
+
   test "should update poll" do
     poll = create :poll, :user => test_user
     attrs = poll.attributes

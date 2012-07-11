@@ -47,6 +47,9 @@ class PollsController < ApplicationController
         flash[:notice] = 'Poll was successfully created.'
         format.html { redirect_to(poll_path(@poll)) }
       else
+        # re-create the blank options
+        (4 - @poll.options.length).times{ @poll.options.build }
+
         format.html { render :action => "new" }
       end
     end
