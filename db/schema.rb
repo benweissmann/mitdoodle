@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120708180742) do
+ActiveRecord::Schema.define(:version => 20120728212529) do
 
   create_table "options", :force => true do |t|
     t.integer  "poll_id"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20120708180742) do
     t.string   "short_link"
   end
 
+  add_index "polls", ["id"], :name => "poll_id_desc"
   add_index "polls", ["key"], :name => "index_polls_on_key"
   add_index "polls", ["user_id"], :name => "index_polls_on_user_id"
 
