@@ -63,7 +63,7 @@ class PollsControllerTest < ActionController::TestCase
     poll = assigns(:poll)
     assert_equal test_user, poll.user
     assert_not_nil poll.key
-    assert_redirects_to MITDOODLE_HOME+poll_path(poll), poll.short_link
+    assert_redirects_to MITDOODLE_PERMALINK_HOME+poll_path(poll), poll.short_link
 
     assert_redirected_to poll_path(poll)
   end

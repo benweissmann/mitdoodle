@@ -121,7 +121,7 @@ class PollTest < ActiveSupport::TestCase
     poll = create :poll
     poll.generate_short_link
 
-    expected_url = "#{MITDOODLE_HOME}/polls/#{poll.key}"
+    expected_url = "#{MITDOODLE_PERMALINK_HOME}/polls/#{poll.key}"
     assert_redirects_to expected_url, poll.short_link
   end
 end
