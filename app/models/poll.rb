@@ -24,6 +24,6 @@ class Poll < ActiveRecord::Base
   end
 
   def generate_short_link
-    self.short_link = UrlShortener.shorten(MITDOODLE_HOME + Rails.application.routes.url_helpers.poll_path(self))
+    self.short_link = UrlShortener.shorten(MITDOODLE_PERMALINK_HOME + Rails.application.routes.url_helpers.poll_path(self))
   end
 end
