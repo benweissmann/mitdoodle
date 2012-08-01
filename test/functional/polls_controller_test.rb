@@ -207,6 +207,24 @@ class PollsControllerTest < ActionController::TestCase
     assert_equal false, Vote.find_by_user_id_and_option_id(foo.id, opt3.id).yes
   end
 
+  test "anonymous polls are anonymous" do
+    poll = create :poll, :anon => true
+    opt1 = create :option, :poll => poll
+    login 'secretuser'
+    post :vote, :id => poll.to_param, opt1.id.to_s => '1'
+
+    login 'secretuser2'
+    post :vote, :id => poll.to_param
+
+    login 'baz'
+    # assert we can't see foo or bar, just their votes
+    get :show, :id => poll.to_param
+    assert_select 'td.yes', 1
+    assert_select 'td.no', 1
+    assert !response.body.include?('secretuser')
+    assert !response.body.include?('secretuser2')
+  end
+
   def assert_forbidden poll
     assert_redirected_to poll_url(poll)
     assert_equal "You don't have permission to do that", flash[:error]

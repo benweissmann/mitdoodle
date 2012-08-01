@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120728212529) do
+ActiveRecord::Schema.define(:version => 20120801065728) do
 
   create_table "options", :force => true do |t|
     t.integer  "poll_id"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20120728212529) do
     t.string   "key"
     t.text     "desc"
     t.string   "short_link"
+    t.boolean  "anon",       :default => false, :null => false
   end
 
   add_index "polls", ["id"], :name => "poll_id_desc"

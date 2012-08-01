@@ -1,5 +1,9 @@
 %h1= @poll.title
 
+- if @poll.anon?
+  %p
+    %strong Anonymous Poll
+
 %p
   Created by
   = @poll.user.username
@@ -44,7 +48,10 @@
               - if owner
                 = link_to '<i class="icon-remove />"'.html_safe, delete_voter_path(:id => @poll, :voter_id => user.id), :confirm => 'Are you sure?', :method => :delete, :class => 'btn btn-danger'
             %td
-              = user.username
+              - if @poll.anon?
+                Anonymous
+              - else
+                = user.username
             - @poll.options.each do |opt|
               - td_for(user, opt) do |vote|
                 - if vote.nil?
@@ -58,7 +65,11 @@
         - unless @poll.closed
           %tr
             %td= submit_tag "Vote", :class => 'btn btn-primary btn-vote'
-            %td= controller.current_user.username
+            %td
+              - if @poll.anon?
+                Anonymous (You)
+              - else
+                = controller.current_user.username
             - @poll.options.each do |opt|
               - td_for(controller.current_user, opt, 'vote-checkbox') do |vote|
                 = check_box_tag(opt.id, 1, vote)

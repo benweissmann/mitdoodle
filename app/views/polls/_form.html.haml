@@ -25,6 +25,11 @@
       = f.text_area :desc, :rows => 5, :cols => 40
 
   .control-group
+    = f.label :anon, 'Anonymous?', :class => 'control-label'
+    .controls
+      = f.check_box :anon
+
+  .control-group
     %label.control-label Options
     .controls
       = f.fields_for :options do |builder|

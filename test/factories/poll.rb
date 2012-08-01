@@ -9,5 +9,6 @@ FactoryGirl.define do
     closed     false
     key        { ActiveSupport::SecureRandom.hex(15) }
     short_link "http://goo.gl/short_link"
+    anon       false
   end
 end
