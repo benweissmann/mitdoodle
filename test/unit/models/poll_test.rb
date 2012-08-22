@@ -27,7 +27,7 @@ class PollTest < ActiveSupport::TestCase
     votes = opts.map{ |opt| (1..3).map { create :vote, :option => opt } }.flatten
 
     assert_equal 9, poll.votes.size
-    assert_equal votes.to_set, poll.votes.to_set  
+    assert_equal votes.to_set, poll.votes.to_set
   end
 
   test "user assoc" do
@@ -78,7 +78,7 @@ class PollTest < ActiveSupport::TestCase
     assert_equal poll.short_link, 'def'
   end
 
-  test "validation" do
+  test "presence validation" do
     poll = build :poll, :user_id => nil
     assert poll.invalid?
 
@@ -87,6 +87,16 @@ class PollTest < ActiveSupport::TestCase
 
     poll = build :poll, :key => ' '
     assert poll.invalid?
+  end
+
+  test "can't un-anonymize a poll" do
+    poll = create :poll, :anon => true
+    poll.anon = false
+    assert poll.invalid?
+
+    poll = create :poll, :anon => false
+    poll.anon = true
+    assert poll.valid?
   end
 
   test "voters" do

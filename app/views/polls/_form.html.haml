@@ -27,7 +27,11 @@
   .control-group
     = f.label :anon, 'Anonymous?', :class => 'control-label'
     .controls
-      = f.check_box :anon
+      - if !@poll.new_record? and Poll.find(@poll.id).anon
+        -# can't un-anonymize an anonymous poll.
+        = f.check_box :anon, :disabled => true
+      - else
+        = f.check_box :anon
 
   .control-group
     %label.control-label Options
