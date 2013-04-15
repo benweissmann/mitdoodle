@@ -10,7 +10,7 @@ module PollsHelper
     end
 
     link_to_function name,
-                     "add_fields(this, \"options\", \"#{escape_javascript(fields)}\")",
+                     "add_fields(this, \"option\", \"#{escape_javascript(fields)}\")",
                      :class => 'btn btn-success btn-add-option'
   end
 
